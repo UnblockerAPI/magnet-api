@@ -1,0 +1,33 @@
+{
+  "name": "magnet-api",
+  "version": "1.0.0",
+  "description": "Magnet links API",
+  "main": "index.js",
+  "scripts": {
+    "start": "bin/start-nginx cross-env NODE_ENV=production node pm2.js",
+    "dev": "node pm2.js",
+    "postinstall": "npm ddp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UnblockerAPI/magnet-api.git"
+  },
+  "keywords": [
+    "magnet"
+  ],
+  "author": "Marise Hayashi <@limitedeternity> (https://limitedeternity.github.io/)",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/UnblockerAPI/magnet-api/issues"
+  },
+  "homepage": "https://github.com/UnblockerAPI/magnet-api#readme",
+  "dependencies": {
+    "compression": "^1.7.3",
+    "cross-env": "^5.2.0",
+    "express": "^4.16.3",
+    "generic-pool": "^3.4.2",
+    "helmet": "^3.12.1",
+    "pm2": "^3.0.0",
+    "webtorrent": "^0.100.0"
+  }
+}
