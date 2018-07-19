@@ -1,6 +1,7 @@
 const express = require('express');
 const compression = require('compression');
 const helmet = require('helmet');
+const fs = require('fs');
 require('events').EventEmitter.prototype._maxListeners = Infinity;
 
 
