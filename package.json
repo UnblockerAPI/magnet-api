@@ -20,6 +20,10 @@
   "bugs": {
     "url": "https://github.com/UnblockerAPI/magnet-api/issues"
   },
+  "engines": {
+    "node": "10.6.0",
+    "npm": "6.2.0"
+  },
   "homepage": "https://github.com/UnblockerAPI/magnet-api#readme",
   "dependencies": {
     "compression": "^1.7.3",
