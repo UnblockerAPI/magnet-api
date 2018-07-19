@@ -25,8 +25,8 @@ app.use(helmet());
 app.use(compression());
 
 app.get('/', async (req, res) => {
-    if (/magnet:\?xt=urn:[a-z0-9]+:[a-zA-Z0-9]*/.test(req.query.magnet)) {
-        let { error, torrent } = await torrentFetcher({ magnetLink: req.query.magnet });
+    if (/magnet:\?xt=urn:[a-z0-9]+:[a-zA-Z0-9]*/.test(req.query.url)) {
+        let { error, torrent } = await torrentFetcher({ magnetLink: req.query.url });
 
         if (error) {
             return res.status(500).json({ success: false, reason: "MetadataFetchFailure" });
