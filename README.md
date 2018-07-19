@@ -4,4 +4,4 @@
 Magnet links conversion API
 
 ### `GET`:
-* `?magnet=<String>` - initiates download of torrent file, converted from magnet link
+* `/?magnet=<String>` - initiates download of torrent file, converted from magnet link
