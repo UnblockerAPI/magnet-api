@@ -14,7 +14,7 @@ module.exports = async ({ magnetLink }) => {
                     resolve({ error: false, torrent: torrentObject });
                 });
 
-                torrentClient.add(targetUrl.href);
+                torrentClient.add(magnetLink);
             });
 
             result({ error, torrent });
