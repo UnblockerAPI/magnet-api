@@ -1,49 +1,49 @@
-const pm2 = require('pm2');
+const express = require('express');
+const compression = require('compression');
+const helmet = require('helmet');
+const fs = require('fs');
+require('events').EventEmitter.prototype._maxListeners = Infinity;
 
-let instances = process.env.WEB_CONCURRENCY || -1;
-let maxMemory = process.env.WEB_MEMORY || 512;
-let options = {
-  name: 'server',
-  script: 'server.js',
-  exec_mode: 'cluster',
-  instances: instances,
-  max_restarts: Infinity,
-  min_uptime: 300,
-  node_args: ["--optimize_for_size", "--max_old_space_size=460", "--gc_interval=100"],
-  max_memory_restart: `${maxMemory}M`,
-};
 
-pm2.connect((err) => {
-  if (err) {
-    console.error(err);
-    process.exit(1);
-  }
-
-  pm2.start(options, (err) => {
-    if (err) {
-      return console.error('Error while launching applications', err.stack || err);
+let isProduction = process.env.NODE_ENV === 'production';
+let PORT = isProduction ? '/tmp/nginx.socket' : 8080;
+let callbackFn = () => {
+    if (isProduction) {
+        fs.closeSync(fs.openSync('/tmp/app-initialized', 'w'));
     }
 
-    console.log(`[PM2] Started ${instances} instances of ${options.script}. Memory limit: ${maxMemory}`)
+    console.log(`Listening on ${PORT}`);
+};
 
-    pm2.launchBus((err, bus) => {
-      console.log('[PM2] Log streaming started\n');
 
-      bus.on('log:out', (packet) => {
-        console.log('[App:%s] %s', packet.process.name, packet.data);
-      });
+const torrentFetcher = require("./modules/magnet");
 
-      bus.on('log:err', (packet) => {
-        console.error('[App:%s][ERR] %s', packet.process.name, packet.data);
-      });
-    });
-  });
 
-  ['SIGINT', 'SIGTERM'].forEach(signal => {
-    process.on(signal, () => {
-      pm2.stop((err) => {
-        process.exit(err ? 1 : 0);
-      });
-    });
-  });
+const app = express();
+app.enable("trust proxy", 1);
+app.use(helmet());
+app.use(compression());
+
+app.get('/', async (req, res) => {
+    if (/magnet:\?xt=urn:[a-z0-9]+:[a-zA-Z0-9]*/.test(req.query.magnet)) {
+        let { error, torrent } = await torrentFetcher({ magnetLink: req.query.magnet });
+
+        if (error) {
+            return res.status(500).json({ success: false, reason: "MetadataFetchFailure" });
+        }
+
+        res.status(200);
+        res.set({
+            'Content-Type': 'application/x-bittorrent',
+            'Content-Length': Buffer.byteLength(torrent.torrentFile),
+            'Content-Disposition': 'attachment; filename="download.torrent"'
+        });
+
+        return res.send(torrent.torrentFile);
+
+    } else {
+        return res.status(400).json({ success: false, reason: "InvalidMagnet" });
+    }
 });
+
+app.listen(PORT, callbackFn);
