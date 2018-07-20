@@ -5,23 +5,27 @@ module.exports = async ({ magnetLink }) => {
     return new Promise((result, reject) => {
         pool.use(async torrentClient => {
             let { error, torrent } = await new Promise(resolve => {
-                torrentClient.on('error', () => {
-                    resolve({ error: true, torrent: null });
-                });
+                let autoRemoveTimer = setTimeout(
+                    () => {
+                        torrentClient.remove(magnetLink);
+                        resolve({ error: true, torrent: null });
+                    },
+                    25000
+                );
 
-                torrentClient.on('torrent', torrentObject => {
-                    torrentClient.destroy();
+                torrentClient.add(magnetLink, torrentObject => {
+                    clearTimeout(autoRemoveTimer);
+
+                    torrentClient.remove(magnetLink);
                     resolve({ error: false, torrent: torrentObject });
                 });
 
-                torrentClient.add(magnetLink);
-                setTimeout(
-                    function() {
-                        torrentClient.destroy();
-                        resolve({ error: true, torrent: null });
-                    },
-                    15000
-                );
+                torrentClient.on('error', () => {
+                    clearTimeout(autoRemoveTimer);
+                    
+                    torrentClient.remove(magnetLink);
+                    resolve({ error: true, torrent: null });
+                });
             });
 
             result({ error, torrent });
