@@ -25,23 +25,30 @@ app.use(helmet());
 app.use(compression());
 
 app.get('/', async (req, res) => {
-    if (/magnet:\?xt=urn:[a-z0-9]+:[a-zA-Z0-9]*/.test(req.query.url)) {
-        let { error, torrent } = await torrentFetcher({ magnetLink: req.query.url });
+    try {
+       let decodedUrl = Buffer.from(req.query.url, 'base64').toString('ascii');
 
-        if (error) {
-            return res.status(500).json({ success: false, reason: "MetadataFetchFailure" });
-        }
+       if (/magnet:\?xt=urn:[a-z0-9]+:[a-zA-Z0-9]*/.test(decodedUrl)) {
+           let { error, torrent } = await torrentFetcher({ magnetLink: decodedUrl });
 
-        res.status(200);
-        res.set({
-            'Content-Type': 'application/x-bittorrent',
-            'Content-Length': Buffer.byteLength(torrent.torrentFile),
-            'Content-Disposition': 'attachment; filename="download.torrent"'
-        });
+           if (error) {
+               return res.status(500).json({ success: false, reason: "MetadataFetchFailure" });
+           }
 
-        return res.send(torrent.torrentFile);
+           res.status(200);
+           res.set({
+               'Content-Type': 'application/x-bittorrent',
+               'Content-Length': Buffer.byteLength(torrent.torrentFile),
+               'Content-Disposition': 'attachment; filename="download.torrent"'
+           });
 
-    } else {
+           return res.send(torrent.torrentFile);
+
+       } else {
+           return res.status(400).json({ success: false, reason: "InvalidMagnet" });
+       }
+
+    } catch (e) {
         return res.status(400).json({ success: false, reason: "InvalidMagnet" });
     }
 });

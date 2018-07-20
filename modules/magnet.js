@@ -15,6 +15,13 @@ module.exports = async ({ magnetLink }) => {
                 });
 
                 torrentClient.add(magnetLink);
+                setTimeout(
+                    function() {
+                        torrentClient.destroy();
+                        resolve({ error: true, torrent: null });
+                    },
+                    15000
+                );
             });
 
             result({ error, torrent });
