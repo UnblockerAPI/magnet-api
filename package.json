@@ -21,8 +21,8 @@
     "url": "https://github.com/UnblockerAPI/magnet-api/issues"
   },
   "engines": {
-    "node": "10.6.0",
-    "npm": "6.2.0"
+    "node": "10.7.0",
+    "npm": "6.3.0"
   },
   "homepage": "https://github.com/UnblockerAPI/magnet-api#readme",
   "dependencies": {
@@ -30,7 +30,7 @@
     "cross-env": "^5.2.0",
     "express": "^4.16.3",
     "generic-pool": "^3.4.2",
-    "helmet": "^3.12.1",
+    "helmet": "^3.13.0",
     "webtorrent": "^0.100.0"
   }
 }
