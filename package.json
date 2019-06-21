@@ -21,16 +21,16 @@
     "url": "https://github.com/UnblockerAPI/magnet-api/issues"
   },
   "engines": {
-    "node": "11.10.0",
-    "npm": "6.8.0"
+    "node": "12.2.0",
+    "npm": "6.9.0"
   },
   "homepage": "https://github.com/UnblockerAPI/magnet-api#readme",
   "dependencies": {
-    "compression": "^1.7.3",
+    "compression": "^1.7.4",
     "cross-env": "^5.2.0",
-    "express": "^4.16.4",
-    "generic-pool": "^3.6.1",
-    "helmet": "^3.15.1",
-    "webtorrent": "^0.103.0"
+    "express": "^4.17.1",
+    "generic-pool": "^3.7.1",
+    "helmet": "^3.18.0",
+    "webtorrent": "^0.103.4"
   }
 }
