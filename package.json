@@ -31,6 +31,6 @@
     "express": "^4.17.1",
     "generic-pool": "^3.7.2",
     "helmet": "^4.4.1",
-    "webtorrent": "^0.106.0"
+    "webtorrent": "^0.107.6"
   }
 }
