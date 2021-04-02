@@ -27,10 +27,10 @@
   "homepage": "https://github.com/UnblockerAPI/magnet-api#readme",
   "dependencies": {
     "compression": "^1.7.4",
-    "cross-env": "^5.2.0",
+    "cross-env": "^7.0.3",
     "express": "^4.17.1",
-    "generic-pool": "^3.7.1",
-    "helmet": "^3.18.0",
-    "webtorrent": "^0.103.4"
+    "generic-pool": "^3.7.2",
+    "helmet": "^4.4.1",
+    "webtorrent": "^0.106.0"
   }
 }
